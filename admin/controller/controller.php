@@ -7,7 +7,15 @@ include("../model/cnDAL.PHP");
 include("../view/tkadmin/tkadminView.php");
 include("../view/chuyennganh/cnView.php");
 include("../view/adminindexView.php");
-
+?>
+<script src="../../external/jquery-3.1.1.min.js"></script>
+<link rel="stylesheet" href="../../assets/css/jquery-ui.min.css"/>
+<link rel="stylesheet" href="../../assets/css/jquery-ui.structure.min.css"/>
+<link rel="stylesheet" href="../../assets/css/jquery-ui.theme.min.css"/>
+<!--    <link rel="stylesheet" href="../../assets/css/bootstrap.css"/>-->
+<!--    <link rel="stylesheet" href="../../assets/css/custom.css"/>-->
+<!--    <link rel="stylesheet" href="../../assets/css/font-awesome.css"/>-->
+<?php
 if($_SERVER['REQUEST_METHOD']=='GET')
 {
 	//Quan ly Admin
@@ -63,33 +71,32 @@ if($_SERVER['REQUEST_METHOD']=='GET')
 		switch($_GET["actionCN"])
 		{
 			case "them":
-			
 			$cnView = new cnView();
 			$cnView->them();
 			break;
 				
 			case "Sua":
-			// if(isset($_GET["matk"]))
-			// {
-				
-			// 	$matk=$_GET["matk"];
-			// 	$tkadminDAL=new tkadminDAL();
-			// 	$obj=$tkadminDAL->getById($matk);
-				
-			// 	$tkadminView=new tkadminView();
-			// 	$tkadminView->suatkadmin($obj);
-			// }
 			if(isset($_GET["macn"]))
 			{
 				$macn = $_GET["macn"];
-				$cnDAL = new cnDAL();
-				$obj=$cnDAL->getById($macn);
+				$DAL = new cnDAL();
+				$obj=$DAL->getById($macn);
 
 				$cnView = new cnView();
 				$cnView->sua($obj);
 			}
 			break;
 			case "xoa":
+                if(isset($_GET["macn"]))
+                {
+                    $macn = $_GET["macn"];
+                    $DAL = new cnDAL();
+                    $obj=$DAL->Delete($macn);
+
+                    $arr=$DAL->getAll();
+                    $cnView = new cnView();
+                    $cnView->danhsach($arr);
+                }
 			// if(isset($_GET["macn"]))
 			// {
 				
@@ -134,7 +141,8 @@ if($_SERVER['REQUEST_METHOD']=='GET')
         $tkadminView=new tkadminView();
         $tkadminView->listtkadmin($arr);	
     }
-    else if($_POST["btnSuaAdmin"])
+
+    else if(isset($_POST["btnSuaAdmin"]))
     {
         $matk=$_POST["txtmatk"];
         $username=$_POST["txtusername"];
@@ -149,6 +157,21 @@ if($_SERVER['REQUEST_METHOD']=='GET')
         $arr=$tkadminDAL->getAll();
         $tkadminView=new tkadminView();
         $tkadminView->listtkadmin($arr);	
+    }
+
+    else if(isset($_POST["btnThemCN"]))
+    {
+        $macn=$_POST["txtmacn"];
+        $tencn=$_POST["txttencn"];
+
+        $obj=new cnDTO($macn,$tencn);
+
+        $DAL=new cnDAL();
+        $DAL->Insert($obj);
+
+        $arr=$DAL->getAll();
+        $cnView=new cnView();
+        $cnView->danhsach($arr);
     }
 }
 	

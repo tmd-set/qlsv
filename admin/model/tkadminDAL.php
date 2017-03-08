@@ -4,7 +4,7 @@ class tkadminDAL
 	function getAll()
 	{
 		$con=new mysqli('localhost','root','','qlsv');
-		$sql="select * from tbltaikhoan where phanquyen=0";
+		$sql="select * from tbltaikhoan where phanquyen>=1";
 		$result=mysqli_query($con,$sql);
 		$arr=array();
 		while($row=mysqli_fetch_array($result))
@@ -30,7 +30,7 @@ class tkadminDAL
 	function getById($id)
 	{
 		$con=new mysqli('localhost','root','','qlsv');
-		$sql="select * from tbltaikhoan where phanquyen=0 and matk='$id'";
+		$sql="select * from tbltaikhoan where phanquyen>=1 and matk='$id'";
 		$result=mysqli_query($con,$sql);
 		$row=mysqli_fetch_array($result);
         $matk =$row["matk"];
@@ -44,7 +44,7 @@ class tkadminDAL
 	function Update($obj)
 	{
 		$con=new mysqli('localhost','root','','qlsv');
-		$sql="Update tbltaikhoan set username='$obj->username',pass='$obj->pass', phanquyen='$obj->phanquyen' where phanquyen=0 and matk='$obj->matk'";
+		$sql="Update tbltaikhoan set username='$obj->username',pass='$obj->pass', phanquyen='$obj->phanquyen' where phanquyen>=1 and matk='$obj->matk'";
 		mysqli_query($con,$sql);
 		mysqli_close($con);	
 	}
@@ -53,8 +53,14 @@ class tkadminDAL
 	{
 		$con=new mysqli('localhost','root','','qlsv');
 		$sql="insert tbltaikhoan values('$obj->matk','$obj->username','$obj->pass','$obj->phanquyen')";
+		echo($sql);
 		mysqli_query($con,$sql);
 		mysqli_close($con);	
 	}
+
+	function checkDuplicate($obj)
+    {
+
+    }
 }
 ?>
